@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Luke Zehrung</Authors>
+    <Version>1.0.3</Version>
+    <Product>CoinMarketCap API Client</Product>
+    <PackageId>CoinMarketCap-API</PackageId>
+    <Description>A simple CoinMarketCap API v2 client written in C#.</Description>
+    <Copyright>Copyight 2018</Copyright>
+    <PackageLicenseUrl>https://github.com/lzehrung/coinmarketcap/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/lzehrung/coinmarketcap</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lzehrung/coinmarketcap</RepositoryUrl>
+    <PackageTags>CoinMarketCap cryptocurrency quotes api client</PackageTags>
+    <PackageReleaseNotes />
   </PropertyGroup>
 
   <ItemGroup>
