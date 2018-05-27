@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinMarketCap", "CoinMarketCap\CoinMarketCap.csproj", "{B58EEED2-F4A4-4176-BA7F-020F351E4529}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinMarketCap.Tests", "CoinMarketCap.Tests\CoinMarketCap.Tests.csproj", "{B85FC57A-900E-40B1-9F19-3657BE5F2CF7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B58EEED2-F4A4-4176-BA7F-020F351E4529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B58EEED2-F4A4-4176-BA7F-020F351E4529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B58EEED2-F4A4-4176-BA7F-020F351E4529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B58EEED2-F4A4-4176-BA7F-020F351E4529}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B85FC57A-900E-40B1-9F19-3657BE5F2CF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B85FC57A-900E-40B1-9F19-3657BE5F2CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B85FC57A-900E-40B1-9F19-3657BE5F2CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B85FC57A-900E-40B1-9F19-3657BE5F2CF7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22B679A0-B4D3-4692-B812-62946E7CB6A3}
+	EndGlobalSection
+EndGlobal
