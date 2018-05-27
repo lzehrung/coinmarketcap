@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>CoinMarketCap-API</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>CoinMarketCapi API Client</title>
     <authors>Luke Zehrung</authors>
     <owners>Luke Zehrung</owners>
@@ -15,4 +15,7 @@
     <copyright>Copyright 2018</copyright>
     <tags>CoinMarketCap cryptocurrency quotes api client</tags>
   </metadata>
+  <files>
+    <file src="bin\Release\**" target="build" />
+</files>
 </package>
