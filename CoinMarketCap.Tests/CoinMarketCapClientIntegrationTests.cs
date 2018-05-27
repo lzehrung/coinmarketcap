@@ -19,15 +19,16 @@ namespace CoinMarketCap.Tests
         [TestMethod]
         public async Task GivenGetListings_Request_Succeeds()
         {
-            var listingsResponse = await _client.GetListings();
+            var listingsResponse = await _client.GetListingsAsync();
 
             Assert.IsNotNull(listingsResponse);
+            Assert.IsTrue(listingsResponse.Data.Length > 1000);
         }
 
         [TestMethod]
         public async Task GivenGetTickers_Request_Succeeds()
         {
-            var tickersResponse = await _client.GetTickers();
+            var tickersResponse = await _client.GetTickersAsync();
 
             Assert.IsNotNull(tickersResponse);
         }
@@ -35,7 +36,7 @@ namespace CoinMarketCap.Tests
         [TestMethod]
         public async Task GivenGetTickersWithParams_Request_Succeeds()
         {
-            var tickersResponse = await _client.GetTickers(101, 50, Sort.Percent_Change_24h, Currency.ETH);
+            var tickersResponse = await _client.GetTickersAsync(101, 50, Sort.Percent_Change_24h, Currency.ETH);
 
             Assert.IsNotNull(tickersResponse);
 
@@ -45,23 +46,19 @@ namespace CoinMarketCap.Tests
             var first = responseData.FirstOrDefault();
             Assert.IsNotNull(first);
 
-            if (first != null)
+            var previousTickerQuote = first.Quotes[Currency.ETH];
+            for (var i = 1; i < responseData.Length; i++)
             {
-                var previousTickerQuote = first.Quotes[Currency.ETH];
-                for (var i = 1; i < responseData.Length; i++)
-                {
-                    var quote = responseData[i].Quotes[Currency.ETH];
-                    Assert.IsTrue(previousTickerQuote.PercentChange24H >= quote.PercentChange24H, "Unexpected ticker list sort order.");
-                    previousTickerQuote = quote;
-                }
+                var quote = responseData[i].Quotes[Currency.ETH];
+                Assert.IsTrue(previousTickerQuote.PercentChange24H >= quote.PercentChange24H, "Unexpected ticker list sort order.");
+                previousTickerQuote = quote;
             }
-
         }
 
         [TestMethod]
         public async Task GivenGetTicker_Request_Succeeds()
         {
-            var tickerResponse = await _client.GetTicker(Cryptocurrency.ChainLink);
+            var tickerResponse = await _client.GetTickerAsync(Cryptocurrency.ChainLink);
 
             Assert.IsNotNull(tickerResponse);
         }
@@ -69,7 +66,7 @@ namespace CoinMarketCap.Tests
         [TestMethod]
         public async Task GivenGetGlobal_Request_Succeeds()
         {
-            var globalResponse = await _client.GetGlobal();
+            var globalResponse = await _client.GetGlobalAsync();
 
             Assert.IsNotNull(globalResponse);
         }

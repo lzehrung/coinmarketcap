@@ -6,13 +6,13 @@ namespace CoinMarketCap.Models
     public partial class ListingsResponse
     {
         [JsonProperty("data")]
-        public Listings[] Data { get; set; }
+        public Listing[] Data { get; set; }
 
         [JsonProperty("metadata")]
         public ListingsMetadata ListingsMetadata { get; set; }
     }
 
-    public partial class Listings
+    public partial class Listing
     {
         [JsonProperty("id")]
         public long Id { get; set; }

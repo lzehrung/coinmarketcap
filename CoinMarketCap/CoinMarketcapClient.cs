@@ -17,15 +17,14 @@ namespace CoinMarketCap
             BaseAddress = new Uri("https://api.coinmarketcap.com/v2/")
         };
 
-        public async Task<ListingsResponse> GetListings(string convert = Currency.USD)
+        public async Task<ListingsResponse> GetListingsAsync()
         {
-            return await GetListings(CancellationToken.None, convert);
+            return await GetListingsAsync(CancellationToken.None);
         }
 
-        public async Task<ListingsResponse> GetListings(CancellationToken cancellationToken, string convert = Currency.USD)
+        public async Task<ListingsResponse> GetListingsAsync(CancellationToken cancellationToken)
         {
-            var convertValue = !string.IsNullOrEmpty(convert) ? $"?convert={convert}" : string.Empty;
-            var url = AppendQueryParams("listings/", convertValue);
+            const string url = "listings/";
             var response = await _client.GetAsync(
                 url,
                 HttpCompletionOption.ResponseContentRead,
@@ -34,17 +33,17 @@ namespace CoinMarketCap
             return listingsResponse;
         }
 
-        public async Task<TickersResponse> GetTickers(int start = 1, int limit = Limit.Default, string sort = Sort.Id, string convert = Currency.USD)
+        public async Task<TickersResponse> GetTickersAsync(int start = 1, int limit = Limit.Default, string sort = Sort.Rank, string convert = Currency.USD)
         {
-            return await GetTickers(CancellationToken.None, start, limit, sort, convert);
+            return await GetTickersAsync(CancellationToken.None, start, limit, sort, convert);
         }
 
-        public async Task<TickersResponse> GetTickers(CancellationToken cancellationToken, int start = 1, int limit = Limit.Default, string sort = Sort.Id, string convert = Currency.USD)
+        public async Task<TickersResponse> GetTickersAsync(CancellationToken cancellationToken, int start = 1, int limit = Limit.Default, string sort = Sort.Id, string convert = Currency.USD)
         {
             var convertValue = convert != Currency.USD ? $"&convert={convert}" : string.Empty;
             var startValue = start != 1 ? $"&start={convert}" : string.Empty;
             var limitValue = start != Limit.Default ? $"&limit={limit}" : string.Empty;
-            var sortValue = sort != Sort.Id ? $"&sort={sort}" : string.Empty;
+            var sortValue = sort != Sort.Rank ? $"&sort={sort}" : string.Empty;
             var url = AppendQueryParams("ticker/", convertValue, startValue, limitValue, sortValue);
             var response = await _client.GetAsync(
                 url,
@@ -53,12 +52,12 @@ namespace CoinMarketCap
             return listingsResponse;
         }
 
-        public async Task<TickerResponse> GetTicker(int id = 1, string convert = Currency.USD)
+        public async Task<TickerResponse> GetTickerAsync(int id = 1, string convert = Currency.USD)
         {
-            return await GetTicker(CancellationToken.None, id, convert);
+            return await GetTickerAsync(CancellationToken.None, id, convert);
         }
 
-        public async Task<TickerResponse> GetTicker(CancellationToken cancellationToken, int id = 1, string convert = Currency.USD)
+        public async Task<TickerResponse> GetTickerAsync(CancellationToken cancellationToken, int id = 1, string convert = Currency.USD)
         {
             var convertValue = !string.IsNullOrEmpty(convert) ? $"?convert={convert}" : string.Empty;
             var url = AppendQueryParams("ticker/", convertValue);
@@ -69,12 +68,12 @@ namespace CoinMarketCap
             return listingsResponse;
         }
 
-        public async Task<GlobalResponse> GetGlobal(string convert = Currency.USD)
+        public async Task<GlobalResponse> GetGlobalAsync(string convert = Currency.USD)
         {
-            return await GetGlobal(CancellationToken.None, convert);
+            return await GetGlobalAsync(CancellationToken.None, convert);
         }
 
-        public async Task<GlobalResponse> GetGlobal(CancellationToken cancellationToken, string convert = Currency.USD)
+        public async Task<GlobalResponse> GetGlobalAsync(CancellationToken cancellationToken, string convert = Currency.USD)
         {
             var convertValue = !string.IsNullOrEmpty(convert) ? $"?convert={convert}" : string.Empty;
             var url = AppendQueryParams("global/", convertValue);
