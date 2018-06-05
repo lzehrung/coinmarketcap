@@ -2,10 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
+    <Version>1.0.4</Version>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <Description>A simple CoinMarketCap API v2 client written in C#.</Description>
+    <PackageLicenseUrl>https://github.com/lzehrung/coinmarketcap/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/lzehrung/coinmarketcap</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lzehrung/coinmarketcap</RepositoryUrl>
+    <Copyright>Copyright 2018</Copyright>
+    <PackageTags>CoinMarketCap cryptocurrency quotes api client</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>CoinMarketCap-API</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
 </Project>

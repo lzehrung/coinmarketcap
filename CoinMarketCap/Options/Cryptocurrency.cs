@@ -2,6 +2,9 @@
 
 namespace CoinMarketCap.Options
 {
+    /**
+     * A collection of Cryptocurrency ID's that can be used for ad-hoc, single-currency queries.
+     */
     public static class Cryptocurrency
     {
         public const int Bitcoin = 1;
