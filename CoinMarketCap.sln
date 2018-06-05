@@ -9,9 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinMarketCap.Tests", "Coin
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B02B6EF4-B27C-4DB4-BFBF-8E98148F3A13}"
 	ProjectSection(SolutionItems) = preProject
-		build_package.bat = build_package.bat
 		LICENSE = LICENSE
-		push_package.bat = push_package.bat
 		README.md = README.md
 	EndProjectSection
 EndProject
