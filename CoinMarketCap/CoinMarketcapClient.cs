@@ -43,7 +43,7 @@ namespace CoinMarketCap
             var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
             var startParam = start >= 1 ? $"start={start}" : null;
             var limitParam = limit >= 1 ? $"limit={limit}" : null;
-            var sortParam = string.IsNullOrWhiteSpace(sort) ? $"sort={sort}" : null;
+            var sortParam = !string.IsNullOrWhiteSpace(sort) ? $"sort={sort}" : null;
 
             var url = AppendQueryParams("ticker/", convertParam, startParam, limitParam, sortParam);
 

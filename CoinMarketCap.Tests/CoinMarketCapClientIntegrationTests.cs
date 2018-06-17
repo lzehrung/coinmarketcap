@@ -75,6 +75,7 @@ namespace CoinMarketCap.Tests
             {
                 var currentTicker = responseData[i];
                 Assert.IsTrue(previousTicker.Id <= currentTicker.Id, "Unexpected ticker list sort order.");
+                previousTicker = currentTicker;
             }
         }
 
