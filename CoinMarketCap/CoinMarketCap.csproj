@@ -4,7 +4,7 @@
     <TargetFramework>netstandard1.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Luke Zehrung</Authors>
-    <Version>1.0.4</Version>
+    <Version>1.1.0</Version>
     <Product>CoinMarketCap API Client</Product>
     <PackageId>CoinMarketCap-API</PackageId>
     <Description>A simple CoinMarketCap API v2 client written in C#.</Description>
