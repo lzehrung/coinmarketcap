@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using CoinMarketCap;
 using CoinMarketCap.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,7 +35,7 @@ namespace CoinMarketCap.Tests
         }
 
         [TestMethod]
-        public async Task GivenGetTickersWithParams_Request_Succeeds()
+        public async Task GivenGetTickers_RequestWithParams_Succeeds()
         {
             var tickersResponse = await _client.GetTickersAsync(101, 50, Sort.Percent_Change_24h, Currency.ETH);
 
@@ -56,11 +57,34 @@ namespace CoinMarketCap.Tests
         }
 
         [TestMethod]
+        public async Task GivenGetTickers_RequestForPage2SortedById_Succeeds()
+        {
+            // important to sort by ID here since it's the only guaranteed sort order
+            var tickersResponse = await _client.GetTickersAsync(101, Limit.Max, Sort.Id, Currency.USD);
+
+            Assert.IsNotNull(tickersResponse);
+
+            var responseData = tickersResponse.Data.Values.ToArray();
+            Assert.AreEqual(100, responseData.Length);
+
+            var first = responseData.FirstOrDefault();
+            Assert.IsNotNull(first);
+
+            var previousTicker = responseData[0];
+            for (var i = 1; i < responseData.Length; i++)
+            {
+                var currentTicker = responseData[i];
+                Assert.IsTrue(previousTicker.Id <= currentTicker.Id, "Unexpected ticker list sort order.");
+            }
+        }
+
+        [TestMethod]
         public async Task GivenGetTicker_Request_Succeeds()
         {
             var tickerResponse = await _client.GetTickerAsync(Cryptocurrency.ChainLink);
 
             Assert.IsNotNull(tickerResponse);
+            Assert.AreEqual("LINK", tickerResponse.Data.Symbol);
         }
 
         [TestMethod]

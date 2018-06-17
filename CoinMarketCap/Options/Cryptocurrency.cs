@@ -13,5 +13,8 @@ namespace CoinMarketCap.Options
         public const int Ethereum = 1027;
         public const int Litecoin = 2;
         public const int Monero = 329;
+        public const int Nano = 1567;
+        public const int Iota = 1720;
+        public const int Eos = 1765;
     }
 }

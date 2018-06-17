@@ -33,18 +33,20 @@ namespace CoinMarketCap
             return listingsResponse;
         }
 
-        public async Task<TickersResponse> GetTickersAsync(int start = 1, int limit = Limit.Default, string sort = Sort.Rank, string convert = Currency.USD)
+        public async Task<TickersResponse> GetTickersAsync(int start = 1, int limit = Limit.Max, string sort = Sort.Id, string convert = Currency.USD)
         {
             return await GetTickersAsync(CancellationToken.None, start, limit, sort, convert);
         }
 
-        public async Task<TickersResponse> GetTickersAsync(CancellationToken cancellationToken, int start = 1, int limit = Limit.Default, string sort = Sort.Id, string convert = Currency.USD)
+        public async Task<TickersResponse> GetTickersAsync(CancellationToken cancellationToken, int start = 1, int limit = Limit.Max, string sort = Sort.Id, string convert = Currency.USD)
         {
-            var convertValue = convert != Currency.USD ? $"&convert={convert}" : string.Empty;
-            var startValue = start != 1 ? $"&start={convert}" : string.Empty;
-            var limitValue = start != Limit.Default ? $"&limit={limit}" : string.Empty;
-            var sortValue = sort != Sort.Rank ? $"&sort={sort}" : string.Empty;
-            var url = AppendQueryParams("ticker/", convertValue, startValue, limitValue, sortValue);
+            var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
+            var startParam = start >= 1 ? $"start={start}" : null;
+            var limitParam = limit >= 1 ? $"limit={limit}" : null;
+            var sortParam = string.IsNullOrWhiteSpace(sort) ? $"sort={sort}" : null;
+
+            var url = AppendQueryParams("ticker/", convertParam, startParam, limitParam, sortParam);
+
             var response = await _client.GetAsync(
                 url,
                 cancellationToken);
@@ -59,8 +61,8 @@ namespace CoinMarketCap
 
         public async Task<TickerResponse> GetTickerAsync(CancellationToken cancellationToken, int id = 1, string convert = Currency.USD)
         {
-            var convertValue = !string.IsNullOrEmpty(convert) ? $"?convert={convert}" : string.Empty;
-            var url = AppendQueryParams("ticker/", convertValue);
+            var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
+            var url = AppendQueryParams($"ticker/{id}/", convertParam);
             var response = await _client.GetAsync(
                 url,
                 cancellationToken);
@@ -75,8 +77,8 @@ namespace CoinMarketCap
 
         public async Task<GlobalResponse> GetGlobalAsync(CancellationToken cancellationToken, string convert = Currency.USD)
         {
-            var convertValue = !string.IsNullOrEmpty(convert) ? $"?convert={convert}" : string.Empty;
-            var url = AppendQueryParams("global/", convertValue);
+            var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
+            var url = AppendQueryParams("global/", convertParam);
             var response = await _client.GetAsync(
                 url,
                 cancellationToken);
@@ -86,7 +88,13 @@ namespace CoinMarketCap
 
         private static string AppendQueryParams(string segment, params string[] parameters)
         {
-            return parameters.Length > 0 ? string.Join(string.Empty, new[] {segment, "?"}.Concat(parameters)) : segment;
+            var encodedParams = parameters
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(System.Net.WebUtility.HtmlEncode)
+                .Select((x, i) => i > 0 ? $"&{x}" : $"?{x}")
+                .ToArray();
+
+            return encodedParams.Length > 0 ? $"{segment}{string.Join(string.Empty, encodedParams)}" : segment;
         }
 
         private static async Task<T> ParseResponse<T>(HttpResponseMessage response)
