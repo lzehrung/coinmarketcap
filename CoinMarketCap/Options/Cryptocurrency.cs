@@ -7,14 +7,14 @@ namespace CoinMarketCap.Options
      */
     public static class Cryptocurrency
     {
-        public const int Bitcoin = 1;
-        public const int BinanceCoin = 1839;
-        public const int ChainLink = 1975;
-        public const int Ethereum = 1027;
-        public const int Litecoin = 2;
-        public const int Monero = 329;
-        public const int Nano = 1567;
-        public const int Iota = 1720;
-        public const int Eos = 1765;
+        public const long Bitcoin = 1;
+        public const long BinanceCoin = 1839;
+        public const long ChainLink = 1975;
+        public const long Ethereum = 1027;
+        public const long Litecoin = 2;
+        public const long Monero = 329;
+        public const long Nano = 1567;
+        public const long Iota = 1720;
+        public const long Eos = 1765;
     }
 }

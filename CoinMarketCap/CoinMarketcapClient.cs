@@ -54,12 +54,12 @@ namespace CoinMarketCap
             return listingsResponse;
         }
 
-        public async Task<TickerResponse> GetTickerAsync(int id = 1, string convert = Currency.USD)
+        public async Task<TickerResponse> GetTickerAsync(long id = 1, string convert = Currency.USD)
         {
             return await GetTickerAsync(CancellationToken.None, id, convert);
         }
 
-        public async Task<TickerResponse> GetTickerAsync(CancellationToken cancellationToken, int id = 1, string convert = Currency.USD)
+        public async Task<TickerResponse> GetTickerAsync(CancellationToken cancellationToken, long id = 1, string convert = Currency.USD)
         {
             var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
             var url = AppendQueryParams($"ticker/{id}/", convertParam);
@@ -91,6 +91,7 @@ namespace CoinMarketCap
             var encodedParams = parameters
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(System.Net.WebUtility.HtmlEncode)
+                // prepend ? for the first param, & for the rest
                 .Select((x, i) => i > 0 ? $"&{x}" : $"?{x}")
                 .ToArray();
 

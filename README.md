@@ -2,6 +2,10 @@
 
 A simple [CoinMarketCap API v2](https://coinmarketcap.com/api/) client written in C#.
 
+Install with NuGet:
+```
+Install-Package CoinMarketCap-API
+```
 
 ## Examples
 Get all listed cryptocurrencies:

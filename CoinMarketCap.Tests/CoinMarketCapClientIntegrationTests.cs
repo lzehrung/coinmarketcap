@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using CoinMarketCap;
 using CoinMarketCap.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -23,7 +22,7 @@ namespace CoinMarketCap.Tests
             var listingsResponse = await _client.GetListingsAsync();
 
             Assert.IsNotNull(listingsResponse);
-            Assert.IsTrue(listingsResponse.Data.Length > 1000);
+            Assert.IsTrue(listingsResponse.Data.Length > 1);
         }
 
         [TestMethod]
@@ -51,7 +50,7 @@ namespace CoinMarketCap.Tests
             for (var i = 1; i < responseData.Length; i++)
             {
                 var quote = responseData[i].Quotes[Currency.ETH];
-                Assert.IsTrue(previousTickerQuote.PercentChange24H >= quote.PercentChange24H, "Unexpected ticker list sort order.");
+                Assert.IsTrue(previousTickerQuote.PercentChange24H >= quote.PercentChange24H, $"Unexpected ticker list sort order: {previousTickerQuote.PercentChange24H} >= {quote.PercentChange24H} failed");
                 previousTickerQuote = quote;
             }
         }
@@ -59,7 +58,6 @@ namespace CoinMarketCap.Tests
         [TestMethod]
         public async Task GivenGetTickers_RequestForPage2SortedById_Succeeds()
         {
-            // important to sort by ID here since it's the only guaranteed sort order
             var tickersResponse = await _client.GetTickersAsync(101, Limit.Max, Sort.Id, Currency.USD);
 
             Assert.IsNotNull(tickersResponse);
@@ -74,7 +72,7 @@ namespace CoinMarketCap.Tests
             for (var i = 1; i < responseData.Length; i++)
             {
                 var currentTicker = responseData[i];
-                Assert.IsTrue(previousTicker.Id <= currentTicker.Id, "Unexpected ticker list sort order.");
+                Assert.IsTrue(previousTicker.Id <= currentTicker.Id, $"Unexpected ticker list sort order: {previousTicker.Id} <= {currentTicker.Id} failed");
                 previousTicker = currentTicker;
             }
         }
@@ -82,18 +80,21 @@ namespace CoinMarketCap.Tests
         [TestMethod]
         public async Task GivenGetTicker_Request_Succeeds()
         {
-            var tickerResponse = await _client.GetTickerAsync(Cryptocurrency.ChainLink);
+            var tickerResponse = await _client.GetTickerAsync(Cryptocurrency.ChainLink, Currency.USD);
 
             Assert.IsNotNull(tickerResponse);
             Assert.AreEqual("LINK", tickerResponse.Data.Symbol);
+            Assert.IsNotNull(tickerResponse.Data.Quotes.ContainsKey(Currency.USD));
+            Assert.IsNotNull(tickerResponse.TickerMetadata);
         }
 
         [TestMethod]
         public async Task GivenGetGlobal_Request_Succeeds()
         {
-            var globalResponse = await _client.GetGlobalAsync();
+            var globalResponse = await _client.GetGlobalAsync(Currency.USD);
 
             Assert.IsNotNull(globalResponse);
+            Assert.IsTrue(globalResponse.Global.Quotes.ContainsKey(Currency.USD));
         }
     }
 }
