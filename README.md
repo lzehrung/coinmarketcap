@@ -1,6 +1,6 @@
 # CoinMarketCap API Client
 
-A simple [CoinMarketCap API v2](https://coinmarketcap.com/api/) client written in C#.
+A simple [CoinMarketCap Pro API v1](https://pro.coinmarketcap.com/api/v1) client written in C#.
 
 Install with NuGet:
 ```
@@ -12,21 +12,21 @@ Install-Package CoinMarketCap-API
 ## Examples
 Get all listed cryptocurrencies:
 ```cs
-var client = new CoinMarketCapClient();
+var client = new CoinMarketCapClient(yourCmcApiKey);
 var listingsResponse = await client.GetListingsAsync();
 ```
 
 
 Get tickers rank 101-200 with quotes in USD:
 ```cs
-var client = new CoinMarketCapClient();
+var client = new CoinMarketCapClient(yourCmcApiKey);
 var tickersResponse = await client.GetTickersAsync(101, Limit.Max, Sort.Rank, Currency.USD);
 ```
 
 
 Get the top 100 cryptocurrency quotes in USD, sorted by market cap (rank):
 ```cs
-var client = new CoinMarketCapClient();
+var client = new CoinMarketCapClient(yourCmcApiKey);
 var response = await client.GetTickersAsync(1, Limit.Max, Sort.Rank, Currency.USD);
 var cryptoQuotes = response.Data.Select(x =>
 {
@@ -64,14 +64,14 @@ Sample output:
 
 Get ChainLink (LINK)'s ticker with quote in USD:
 ```cs
-var client = new CoinMarketCapClient();
+var client = new CoinMarketCapClient(yourCmcApiKey);
 var chainlinkTicker = await client.GetTickerAsync(1975, Currency.USD);
 ```
 
 
 Get ChainLink (LINK)'s ticker with quote in ETH:
 ```cs
-var client = new CoinMarketCapClient();
+var client = new CoinMarketCapClient(yourCmcApiKey);
 var chainlinkTicker = await client.GetTickerAsync(1975, Currency.ETH);
 ```
 

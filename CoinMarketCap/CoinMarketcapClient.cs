@@ -14,8 +14,13 @@ namespace CoinMarketCap
     {
         private readonly HttpClient _client = new HttpClient
         {
-            BaseAddress = new Uri("https://api.coinmarketcap.com/v2/")
+            BaseAddress = new Uri("https://pro-api.coinmarketcap.com/")
         };
+
+        public CoinMarketCapClient(string apiKey)
+        {
+            _client.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", apiKey);
+        }
 
         public async Task<ListingsResponse> GetListingsAsync()
         {
@@ -25,10 +30,9 @@ namespace CoinMarketCap
         public async Task<ListingsResponse> GetListingsAsync(CancellationToken cancellationToken)
         {
             const string url = "listings/";
-            var response = await _client.GetAsync(
-                url,
-                HttpCompletionOption.ResponseContentRead,
-                cancellationToken);
+
+            var response = await _client.GetAsync(url, HttpCompletionOption.ResponseContentRead, cancellationToken);
+
             var listingsResponse = await ParseResponse<ListingsResponse>(response);
             return listingsResponse;
         }
@@ -44,12 +48,10 @@ namespace CoinMarketCap
             var startParam = start >= 1 ? $"start={start}" : null;
             var limitParam = limit >= 1 ? $"limit={limit}" : null;
             var sortParam = !string.IsNullOrWhiteSpace(sort) ? $"sort={sort}" : null;
-
             var url = AppendQueryParams("ticker/", convertParam, startParam, limitParam, sortParam);
 
-            var response = await _client.GetAsync(
-                url,
-                cancellationToken);
+            var response = await _client.GetAsync(url, cancellationToken);
+
             var listingsResponse = await ParseResponse<TickersResponse>(response);
             return listingsResponse;
         }
@@ -63,9 +65,9 @@ namespace CoinMarketCap
         {
             var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
             var url = AppendQueryParams($"ticker/{id}/", convertParam);
-            var response = await _client.GetAsync(
-                url,
-                cancellationToken);
+
+            var response = await _client.GetAsync(url, cancellationToken);
+
             var listingsResponse = await ParseResponse<TickerResponse>(response);
             return listingsResponse;
         }
@@ -79,9 +81,9 @@ namespace CoinMarketCap
         {
             var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
             var url = AppendQueryParams("global/", convertParam);
-            var response = await _client.GetAsync(
-                url,
-                cancellationToken);
+            
+            var response = await _client.GetAsync(url, cancellationToken);
+
             var globalResponse = await ParseResponse<GlobalResponse>(response);
             return globalResponse;
         }

@@ -13,7 +13,7 @@ namespace CoinMarketCap.Tests
         [TestInitialize]
         public void Init()
         {
-            _client = new CoinMarketCapClient();
+            _client = new CoinMarketCapClient("test");
         }
 
         [TestMethod]
