@@ -5,6 +5,7 @@ namespace CoinMarketCap.Options
 {
     public static class Currency
     {
+        public const string USD = "USD";
         public const string AUD = "AUD";
         public const string BRL = "BRL";
         public const string CAD = "CAD";
@@ -35,7 +36,6 @@ namespace CoinMarketCap.Options
         public const string THB = "THB";
         public const string TRY = "TRY";
         public const string TWD = "TWD";
-        public const string USD = "USD";
         public const string ZAR = "ZAR";
 
         // crypto
