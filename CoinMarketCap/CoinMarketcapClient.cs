@@ -28,17 +28,26 @@ namespace CoinMarketCap
 
         public async Task<Response<IEnumerable<Map>>> GetCryptocurrencyMap(MapParameters request)
         {
+            // cryptocurrency/map
             return new Response<IEnumerable<Map>>();
         }
 
         public async Task<Response<IEnumerable<Info>>> GetCryptocurrencyInfo(InfoParameters request)
         {
+            // cryptocurrency/info
             return new Response<IEnumerable<Info>>();
         }
 
         public async Task<Response<IEnumerable<CryptocurrencyWithLatestQuote>>> GetLatestMarketData(LatestParameters request)
         {
+            // cryptocurrency/listings/latest
             return new Response<IEnumerable<CryptocurrencyWithLatestQuote>>();
+        }
+
+        public async Task<Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>> GetHistoricalMarketData(HistoricalParameters request)
+        {
+            // cryptocurrency/listings/latest
+            return new Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>();
         }
 
         //public async Task<ListingsResponse> GetListingsAsync(CancellationToken cancellationToken)
@@ -81,7 +90,7 @@ namespace CoinMarketCap
         //{
         //    var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
         //    var url = AppendQueryParams("global/", convertParam);
-            
+
         //    var response = await _client.GetAsync(url, cancellationToken);
 
         //    var globalResponse = await ParseResponse<GlobalResponse>(response);
