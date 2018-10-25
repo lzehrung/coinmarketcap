@@ -32,10 +32,10 @@ namespace CoinMarketCap
             return new Response<IEnumerable<Map>>();
         }
 
-        public async Task<Response<IEnumerable<Info>>> GetCryptocurrencyInfo(InfoParameters request)
+        public async Task<Response<IEnumerable<Metadata>>> GetCryptocurrencyInfo(MetadataParameters request)
         {
             // cryptocurrency/info
-            return new Response<IEnumerable<Info>>();
+            return new Response<IEnumerable<Metadata>>();
         }
 
         public async Task<Response<IEnumerable<CryptocurrencyWithLatestQuote>>> GetLatestMarketData(LatestParameters request)
@@ -46,9 +46,17 @@ namespace CoinMarketCap
 
         public async Task<Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>> GetHistoricalMarketData(HistoricalParameters request)
         {
-            // cryptocurrency/listings/latest
+            // cryptocurrency/listings/historical
             return new Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>();
         }
+
+        public async Task<Response<MarketPairLatest>> GetMarketPairLatest(MarketPairParameters request)
+        {
+            // cryptocurrency/market-pairs/latest
+            return new Response<MarketPairLatest>();
+        }
+
+
 
         //public async Task<ListingsResponse> GetListingsAsync(CancellationToken cancellationToken)
         //{

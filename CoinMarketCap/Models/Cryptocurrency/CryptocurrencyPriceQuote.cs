@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CoinMarketCap.Models.Cryptocurrency
 {
-    public class Quote
+    public class CryptocurrencyPriceQuote
     {
         [JsonProperty("price")]
         public double Price { get; set; }
