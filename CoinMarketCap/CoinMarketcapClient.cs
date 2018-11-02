@@ -48,10 +48,10 @@ namespace CoinMarketCap
             return new Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>();
         }
 
-        public async Task<Response<MarketPairLatest>> GetMarketPairLatest(MarketPairParameters request)
+        public async Task<Response<MarketPairLatestResponse>> GetMarketPairLatest(MarketPairsLatestParams request)
         {
             // cryptocurrency/market-pairs/latest
-            return new Response<MarketPairLatest>();
+            return new Response<MarketPairLatestResponse>();
         }
 
         //public async Task<ListingsResponse> GetListingsAsync(CancellationToken cancellationToken)
