@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using CoinMarketCap.Models;
 using CoinMarketCap.Models.Cryptocurrency;
-using CoinMarketCap.Options;
 using Newtonsoft.Json;
 // ReSharper disable UnusedMember.Global
 
@@ -48,6 +46,12 @@ namespace CoinMarketCap
         {
             // cryptocurrency/listings/latest
             return new Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>();
+        }
+
+        public async Task<Response<MarketPairLatestResponse>> GetMarketPairsLatest(MarketPairsLatestParams request)
+        {
+            // cryptocurrency/market-pairs/latest
+            return new Response<MarketPairLatestResponse>();
         }
 
         //public async Task<ListingsResponse> GetListingsAsync(CancellationToken cancellationToken)
