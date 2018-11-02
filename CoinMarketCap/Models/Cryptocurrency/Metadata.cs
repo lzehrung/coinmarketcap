@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace CoinMarketCap.Models.Cryptocurrency
 {
-    public class Info
+    public class Metadata
     {
         [JsonProperty("id")]
         public long Id { get; set; }

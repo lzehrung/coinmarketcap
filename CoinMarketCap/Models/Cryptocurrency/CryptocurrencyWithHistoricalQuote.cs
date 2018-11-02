@@ -37,6 +37,6 @@ namespace CoinMarketCap.Models.Cryptocurrency
         public DateTimeOffset LastUpdated { get; set; }
 
         [JsonProperty("quote")]
-        public Dictionary<string, Quote> Quote { get; set; }
+        public Dictionary<string, MarketPairQuote> Quote { get; set; }
     }
 }
