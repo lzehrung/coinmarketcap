@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CoinMarketCap.Models.Cryptocurrency
 {
-    public class Map
+    public class IdMap
     {
         [JsonProperty("id")]
         public long Id { get; set; }

@@ -24,10 +24,10 @@ namespace CoinMarketCap
             _client.DefaultRequestHeaders.Add("Accept-Encoding", "deflate,gzip");
         }
 
-        public async Task<Response<IEnumerable<Map>>> GetCryptocurrencyMap(MapParameters request)
+        public async Task<Response<IEnumerable<IdMap>>> GetCryptocurrencyIdMap(IdMapParameters request)
         {
             // cryptocurrency/map
-            return new Response<IEnumerable<Map>>();
+            return new Response<IEnumerable<IdMap>>();
         }
 
         public async Task<Response<IEnumerable<Metadata>>> GetCryptocurrencyInfo(MetadataParameters request)
@@ -36,13 +36,13 @@ namespace CoinMarketCap
             return new Response<IEnumerable<Metadata>>();
         }
 
-        public async Task<Response<IEnumerable<CryptocurrencyWithLatestQuote>>> GetLatestMarketData(LatestParameters request)
+        public async Task<Response<IEnumerable<CryptocurrencyWithLatestQuote>>> GetLatestMarketData(ListingLatestParameters request)
         {
             // cryptocurrency/listings/latest
             return new Response<IEnumerable<CryptocurrencyWithLatestQuote>>();
         }
 
-        public async Task<Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>> GetHistoricalMarketData(HistoricalParameters request)
+        public async Task<Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>> GetHistoricalMarketData(ListingHistoricalParameters request)
         {
             // cryptocurrency/listings/historical
             return new Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>();
@@ -53,54 +53,7 @@ namespace CoinMarketCap
             // cryptocurrency/market-pairs/latest
             return new Response<MarketPairLatestResponse>();
         }
-
-        //public async Task<ListingsResponse> GetListingsAsync(CancellationToken cancellationToken)
-        //{
-        //    const string url = "listings/";
-
-        //    var response = await _client.GetAsync(url, HttpCompletionOption.ResponseContentRead, cancellationToken);
-
-        //    var listingsResponse = await ParseResponse<ListingsResponse>(response);
-        //    return listingsResponse;
-        //}
-
-        //public async Task<TickersResponse> GetTickersAsync(CancellationToken cancellationToken, int start = 1, int limit = Limit.Max, string sort = Sort.Id, string convert = Currency.USD)
-        //{
-        //    var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
-        //    var startParam = start >= 1 ? $"start={start}" : null;
-        //    var limitParam = limit >= 1 ? $"limit={limit}" : null;
-        //    var sortParam = !string.IsNullOrWhiteSpace(sort) ? $"sort={sort}" : null;
-        //    var url = AppendQueryParams("ticker/", convertParam, startParam, limitParam, sortParam);
-
-        //    var response = await _client.GetAsync(url, cancellationToken);
-
-        //    var listingsResponse = await ParseResponse<TickersResponse>(response);
-        //    return listingsResponse;
-        //}
-
-        //public async Task<TickerResponse> GetTickerAsync(CancellationToken cancellationToken, long id = 1, string convert = Currency.USD)
-        //{
-        //    var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
-        //    var url = AppendQueryParams($"ticker/{id}/", convertParam);
-
-        //    var response = await _client.GetAsync(url, cancellationToken);
-
-        //    var listingsResponse = await ParseResponse<TickerResponse>(response);
-        //    return listingsResponse;
-        //}
-
-
-        //public async Task<GlobalResponse> GetGlobalAsync(CancellationToken cancellationToken, string convert = Currency.USD)
-        //{
-        //    var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
-        //    var url = AppendQueryParams("global/", convertParam);
-
-        //    var response = await _client.GetAsync(url, cancellationToken);
-
-        //    var globalResponse = await ParseResponse<GlobalResponse>(response);
-        //    return globalResponse;
-        //}
-
+        
         private static string AppendQueryParams(string segment, params string[] parameters)
         {
             var encodedParams = parameters

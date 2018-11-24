@@ -2,24 +2,24 @@
 
 namespace CoinMarketCap.Models.Cryptocurrency
 {
-    public class LatestParameters
+    public class ListingLatestParameters
     {
         [JsonProperty("start")]
-        public int Start { get; set; }
+        public int? Start { get; set; }
 
         [JsonProperty("limit")]
-        public int Limit { get; set; }
+        public int? Limit { get; set; }
 
         [JsonProperty("convert")]
-        public int Convert { get; set; }
+        public int? Convert { get; set; }
 
         [JsonProperty("sort")]
-        public int Sort { get; set; }
+        public int? Sort { get; set; }
 
         [JsonProperty("sort_dir")]
-        public int SortDir { get; set; }
+        public int? SortDir { get; set; }
 
         [JsonProperty("cryptocurrency_type")]
-        public int CryptocurrencyType { get; set; }
+        public int? CryptocurrencyType { get; set; }
     }
 }

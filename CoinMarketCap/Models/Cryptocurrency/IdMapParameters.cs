@@ -2,7 +2,7 @@
 
 namespace CoinMarketCap.Models.Cryptocurrency
 {
-    public class MapParameters
+    public class IdMapParameters
     {
         [JsonProperty("listing_status")]
         public string ListingStatus { get; set; }
