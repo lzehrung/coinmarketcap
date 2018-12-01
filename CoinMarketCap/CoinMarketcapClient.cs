@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using CoinMarketCap.Models;
 using CoinMarketCap.Models.Cryptocurrency;
@@ -26,52 +26,54 @@ namespace CoinMarketCap
 
         public async Task<Response<IEnumerable<IdMap>>> GetCryptocurrencyIdMap(IdMapParameters request)
         {
-            // cryptocurrency/map
-            return new Response<IEnumerable<IdMap>>();
+            return await SendApiRequest<IEnumerable<IdMap>>(request, "cryptocurrency/map");
         }
 
         public async Task<Response<IEnumerable<Metadata>>> GetCryptocurrencyInfo(MetadataParameters request)
         {
-            // cryptocurrency/info
-            return new Response<IEnumerable<Metadata>>();
+            return await SendApiRequest<IEnumerable<Metadata>>(request, "cryptocurrency/info");
         }
 
         public async Task<Response<IEnumerable<CryptocurrencyWithLatestQuote>>> GetLatestMarketData(ListingLatestParameters request)
         {
-            // cryptocurrency/listings/latest
-            return new Response<IEnumerable<CryptocurrencyWithLatestQuote>>();
+            return await SendApiRequest<IEnumerable<CryptocurrencyWithLatestQuote>>(request, "cryptocurrency/listings/latest");
         }
 
         public async Task<Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>> GetHistoricalMarketData(ListingHistoricalParameters request)
         {
-            // cryptocurrency/listings/historical
-            return new Response<IEnumerable<CryptocurrencyWithHistoricalQuote>>();
+            return await SendApiRequest<IEnumerable<CryptocurrencyWithHistoricalQuote>>(request, "cryptocurrency/listings/historical");
         }
 
         public async Task<Response<MarketPairLatestResponse>> GetMarketPairLatest(MarketPairsLatestParams request)
         {
-            // cryptocurrency/market-pairs/latest
-            return new Response<MarketPairLatestResponse>();
-        }
-        
-        private static string AppendQueryParams(string segment, params string[] parameters)
-        {
-            var encodedParams = parameters
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(System.Net.WebUtility.HtmlEncode)
-                // prepend ? for the first param, & for the rest
-                .Select((x, i) => i > 0 ? $"&{x}" : $"?{x}")
-                .ToArray();
-
-            return encodedParams.Length > 0 ? $"{segment}{string.Join(string.Empty, encodedParams)}" : segment;
+            return await SendApiRequest<MarketPairLatestResponse>(request, "cryptocurrency/market-pairs/latest");
         }
 
-        private static async Task<T> ParseResponse<T>(HttpResponseMessage response)
+        public async Task<Response<OhlcvHistoricalResponse>> GetMarketPairLatest(OhlcvHistoricalParams request)
         {
-            response.EnsureSuccessStatusCode();
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var listingsResponse = JsonConvert.DeserializeObject<T>(responseContent);
-            return listingsResponse;
+            return await SendApiRequest<OhlcvHistoricalResponse>(request, "cryptocurrency/ohlcv/historical");
+        }
+
+        public async Task<Response<CryptocurrencyWithLatestQuote>> GetLatestQuote(LatestQuoteParams request)
+        {
+            return await SendApiRequest<CryptocurrencyWithLatestQuote>(request, "cryptocurrency/quotes/latest");
+        }
+
+        public async Task<Response<CryptocurrencyWithHistoricalQuote>> GetHistoricalQuote(HistoricalQuoteParams request)
+        {
+            return await SendApiRequest<CryptocurrencyWithHistoricalQuote>(request, "cryptocurrency/quotes/historical");
+        }
+
+        private async Task<Response<T>> SendApiRequest<T>(object requestParams, string endpoint)
+        {
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, endpoint)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(requestParams), Encoding.UTF8)
+            };
+            var responseMessage = await _client.SendAsync(requestMessage);
+            responseMessage.EnsureSuccessStatusCode();
+            var content = await responseMessage.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Response<T>>(content);
         }
     }
 }

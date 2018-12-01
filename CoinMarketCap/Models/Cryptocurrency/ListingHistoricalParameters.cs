@@ -24,6 +24,6 @@ namespace CoinMarketCap.Models.Cryptocurrency
         public int? SortDir { get; set; }
 
         [JsonProperty("cryptocurrency_type")]
-        public int? CryptocurrencyType { get; set; }
+        public string CryptocurrencyType { get; set; }
     }
 }

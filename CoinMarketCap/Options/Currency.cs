@@ -3,6 +3,9 @@
 
 namespace CoinMarketCap.Options
 {
+    /// <summary>
+    /// Used for "convert" parameter values.
+    /// </summary>
     public static class Currency
     {
         public const string USD = "USD";
