@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinMarketCap.Models;
 using CoinMarketCap.Models.Cryptocurrency;
@@ -24,7 +25,7 @@ namespace CoinMarketCap.Tests
             Response<List<IdMap>> response = null;
             try
             {
-                response = await _client.GetCryptocurrencyIdMapAsync(new IdMapParameters());
+                response = await _client.GetCryptocurrencyIdMapAsync(new IdMapParameters(), CancellationToken.None);
             }
             catch (Exception ex)
             {
@@ -39,7 +40,7 @@ namespace CoinMarketCap.Tests
             Response<List<CryptocurrencyWithLatestQuote>> response = null;
             try
             {
-                response = await _client.GetLatestListingsAsync(new ListingLatestParameters());
+                response = await _client.GetLatestListingsAsync(new ListingLatestParameters(), CancellationToken.None);
             }
             catch (Exception ex)
             {
