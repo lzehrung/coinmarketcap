@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinMarketCap.Models;
-using CoinMarketCap.Options;
+using CoinMarketCap.Models.Cryptocurrency;
+using CoinMarketCap.Models.Global;
 using Newtonsoft.Json;
 // ReSharper disable UnusedMember.Global
 
@@ -12,98 +15,187 @@ namespace CoinMarketCap
 {
     public class CoinMarketCapClient
     {
-        private readonly HttpClient _client = new HttpClient
+        public readonly HttpClient Client = new HttpClient
         {
-            BaseAddress = new Uri("https://api.coinmarketcap.com/v2/")
+            BaseAddress = new Uri("https://pro-api.coinmarketcap.com/v1/")
         };
 
-        public async Task<ListingsResponse> GetListingsAsync()
+        public CoinMarketCapClient(string apiKey)
         {
-            return await GetListingsAsync(CancellationToken.None);
+            Client.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", apiKey);
+            Client.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
-        public async Task<ListingsResponse> GetListingsAsync(CancellationToken cancellationToken)
+        /// <summary>
+        /// Returns a paginated list of all cryptocurrencies by CoinMarketCap ID. We recommend using this convenience endpoint to lookup and utilize our unique cryptocurrency id across all endpoints as typical identifiers like ticker symbols can match multiple cryptocurrencies and change over time. As a convenience you may pass a comma-separated list of cryptocurrency symbols as symbol to filter this list to only those you require.
+        /// </summary>
+        public async Task<Response<List<IdMap>>> GetCryptocurrencyIdMapAsync(IdMapParameters request, CancellationToken cancellationToken)
         {
-            const string url = "listings/";
-            var response = await _client.GetAsync(
-                url,
-                HttpCompletionOption.ResponseContentRead,
-                cancellationToken);
-            var listingsResponse = await ParseResponse<ListingsResponse>(response);
-            return listingsResponse;
+            return await SendApiRequest<List<IdMap>>(request, "cryptocurrency/map", cancellationToken);
         }
 
-        public async Task<TickersResponse> GetTickersAsync(int start = 1, int limit = Limit.Max, string sort = Sort.Id, string convert = Currency.USD)
+        /// <summary>
+        /// Returns a paginated list of all cryptocurrencies by CoinMarketCap ID. We recommend using this convenience endpoint to lookup and utilize our unique cryptocurrency id across all endpoints as typical identifiers like ticker symbols can match multiple cryptocurrencies and change over time. As a convenience you may pass a comma-separated list of cryptocurrency symbols as symbol to filter this list to only those you require.
+        /// </summary>
+        public Response<List<IdMap>> GetCryptocurrencyIdMap(IdMapParameters request)
         {
-            return await GetTickersAsync(CancellationToken.None, start, limit, sort, convert);
+            return GetCryptocurrencyIdMapAsync(request, CancellationToken.None).Result;
         }
 
-        public async Task<TickersResponse> GetTickersAsync(CancellationToken cancellationToken, int start = 1, int limit = Limit.Max, string sort = Sort.Id, string convert = Currency.USD)
+        /// <summary>
+        /// Returns all static metadata for one or more cryptocurrencies including name, symbol, logo, and its various registered URLs.
+        /// </summary>
+        public async Task<Response<List<Metadata>>> GetCryptocurrencyInfoAsync(MetadataParameters request, CancellationToken cancellationToken)
         {
-            var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
-            var startParam = start >= 1 ? $"start={start}" : null;
-            var limitParam = limit >= 1 ? $"limit={limit}" : null;
-            var sortParam = !string.IsNullOrWhiteSpace(sort) ? $"sort={sort}" : null;
-
-            var url = AppendQueryParams("ticker/", convertParam, startParam, limitParam, sortParam);
-
-            var response = await _client.GetAsync(
-                url,
-                cancellationToken);
-            var listingsResponse = await ParseResponse<TickersResponse>(response);
-            return listingsResponse;
+            return await SendApiRequest<List<Metadata>>(request, "cryptocurrency/info", cancellationToken);
         }
 
-        public async Task<TickerResponse> GetTickerAsync(long id = 1, string convert = Currency.USD)
+        /// <summary>
+        /// Returns all static metadata for one or more cryptocurrencies including name, symbol, logo, and its various registered URLs.
+        /// </summary>
+        public Response<List<Metadata>> GetCryptocurrencyInfo(MetadataParameters request)
         {
-            return await GetTickerAsync(CancellationToken.None, id, convert);
+            return GetCryptocurrencyInfoAsync(request, CancellationToken.None).Result;
         }
 
-        public async Task<TickerResponse> GetTickerAsync(CancellationToken cancellationToken, long id = 1, string convert = Currency.USD)
+        /// <summary>
+        /// Get a paginated list of all cryptocurrencies with latest market data. You can configure this call to sort by market cap or another market ranking field. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public async Task<Response<List<CryptocurrencyWithLatestQuote>>> GetLatestListingsAsync(ListingLatestParameters request, CancellationToken cancellationToken)
         {
-            var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
-            var url = AppendQueryParams($"ticker/{id}/", convertParam);
-            var response = await _client.GetAsync(
-                url,
-                cancellationToken);
-            var listingsResponse = await ParseResponse<TickerResponse>(response);
-            return listingsResponse;
+            return await SendApiRequest<List<CryptocurrencyWithLatestQuote>>(request, "cryptocurrency/listings/latest", cancellationToken);
         }
 
-        public async Task<GlobalResponse> GetGlobalAsync(string convert = Currency.USD)
+        /// <summary>
+        /// Get a paginated list of all cryptocurrencies with latest market data. You can configure this call to sort by market cap or another market ranking field. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public Response<List<CryptocurrencyWithLatestQuote>> GetLatestListings(ListingLatestParameters request)
         {
-            return await GetGlobalAsync(CancellationToken.None, convert);
+            return GetLatestListingsAsync(request, CancellationToken.None).Result;
         }
 
-        public async Task<GlobalResponse> GetGlobalAsync(CancellationToken cancellationToken, string convert = Currency.USD)
+        /// <summary>
+        /// Get a paginated list of all cryptocurrencies with market data for a given historical time. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public async Task<Response<List<CryptocurrencyWithHistoricalQuote>>> GetHistoricalListingsAsync(ListingHistoricalParameters request, CancellationToken cancellationToken)
         {
-            var convertParam = !string.IsNullOrWhiteSpace(convert) ? $"convert={convert}" : null;
-            var url = AppendQueryParams("global/", convertParam);
-            var response = await _client.GetAsync(
-                url,
-                cancellationToken);
-            var globalResponse = await ParseResponse<GlobalResponse>(response);
-            return globalResponse;
+            return await SendApiRequest<List<CryptocurrencyWithHistoricalQuote>>(request, "cryptocurrency/listings/historical", cancellationToken);
         }
 
-        private static string AppendQueryParams(string segment, params string[] parameters)
+        /// <summary>
+        /// Get a paginated list of all cryptocurrencies with market data for a given historical time. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public Response<List<CryptocurrencyWithHistoricalQuote>> GetHistoricalListings(ListingHistoricalParameters request)
         {
-            var encodedParams = parameters
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(System.Net.WebUtility.HtmlEncode)
+            return GetHistoricalListingsAsync(request, CancellationToken.None).Result;
+        }
+
+        /// <summary>
+        /// Lists all market pairs for the specified cryptocurrency with associated stats. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public async Task<Response<MarketPairLatestResponse>> GetMarketPairLatestAsync(MarketPairsLatestParameters request, CancellationToken cancellationToken)
+        {
+            return await SendApiRequest<MarketPairLatestResponse>(request, "cryptocurrency/market-pairs/latest", cancellationToken);
+        }
+
+        /// <summary>
+        /// Lists all market pairs for the specified cryptocurrency with associated stats. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public Response<MarketPairLatestResponse> GetMarketPairLatest(MarketPairsLatestParameters request)
+        {
+            return GetMarketPairLatestAsync(request, CancellationToken.None).Result;
+        }
+
+        /// <summary>
+        /// Return an interval of historic OHLCV (Open, High, Low, Close, Volume) market quotes for a cryptocurrency. Currently daily and hourly OHLCV periods are supported.
+        /// </summary>
+        public async Task<Response<OhlcvHistoricalResponse>> GetOhlcvHistoricalAsync(OhlcvHistoricalParameters request, CancellationToken cancellationToken)
+        {
+            return await SendApiRequest<OhlcvHistoricalResponse>(request, "cryptocurrency/ohlcv/historical", cancellationToken);
+        }
+
+        /// <summary>
+        /// Return an interval of historic OHLCV (Open, High, Low, Close, Volume) market quotes for a cryptocurrency. Currently daily and hourly OHLCV periods are supported.
+        /// </summary>
+        public Response<OhlcvHistoricalResponse> GetOhlcvHistorical(OhlcvHistoricalParameters request)
+        {
+            return GetOhlcvHistoricalAsync(request, CancellationToken.None).Result;
+        }
+
+        /// <summary>
+        /// Get the latest market quote for 1 or more cryptocurrencies. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public async Task<Response<CryptocurrencyWithLatestQuote>> GetLatestQuoteAsync(LatestQuoteParameters request, CancellationToken cancellationToken)
+        {
+            return await SendApiRequest<CryptocurrencyWithLatestQuote>(request, "cryptocurrency/quotes/latest", cancellationToken);
+        }
+
+        /// <summary>
+        /// Get the latest market quote for 1 or more cryptocurrencies. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public Response<CryptocurrencyWithLatestQuote> GetLatestQuote(LatestQuoteParameters request)
+        {
+            return GetLatestQuoteAsync(request, CancellationToken.None).Result;
+        }
+
+        /// <summary>
+        /// Returns an interval of historic market quotes for any cryptocurrency based on time and interval parameters.
+        /// </summary>
+        public async Task<Response<CryptocurrencyWithHistoricalQuote>> GetHistoricalQuoteAsync(HistoricalQuoteParameters request, CancellationToken cancellationToken)
+        {
+            return await SendApiRequest<CryptocurrencyWithHistoricalQuote>(request, "cryptocurrency/quotes/historical", cancellationToken);
+        }
+
+        /// <summary>
+        /// Returns an interval of historic market quotes for any cryptocurrency based on time and interval parameters.
+        /// </summary>
+        public Response<CryptocurrencyWithHistoricalQuote> GetHistoricalQuote(HistoricalQuoteParameters request)
+        {
+            return GetHistoricalQuoteAsync(request, CancellationToken.None).Result;
+        }
+
+        /// <summary>
+        /// Get the latest quote of aggregate market metrics. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public async Task<Response<AggregateMarketMetrics>> GetAggregateMarketMetricsAsync(AggregateMarketMetricsParams request, CancellationToken cancellationToken)
+        {
+            return await SendApiRequest<AggregateMarketMetrics>(request, "global-metrics/quotes/latest", cancellationToken);
+        }
+
+        /// <summary>
+        /// Get the latest quote of aggregate market metrics. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+        /// </summary>
+        public Response<AggregateMarketMetrics> GetAggregateMarketMetrics(AggregateMarketMetricsParams request)
+        {
+            return GetAggregateMarketMetricsAsync(request, CancellationToken.None).Result;
+        }
+
+        private async Task<Response<T>> SendApiRequest<T>(object requestParams, string endpoint, CancellationToken cancellationToken)
+        {
+            var queryParams = ConvertToQueryParams(requestParams);
+            var endpointWithParams = $"{endpoint}{queryParams}";
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, endpointWithParams);
+            var responseMessage = await Client.SendAsync(requestMessage, cancellationToken);
+            responseMessage.EnsureSuccessStatusCode();
+            var content = await responseMessage.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Response<T>>(content);
+        }
+
+        private static string ConvertToQueryParams(object parameters)
+        {
+            var properties = parameters.GetType().GetRuntimeProperties();
+            var encodedValues = properties
+                .Select(x => new
+                {
+                    Name = x.Name.ToLower(),
+                    Value = x.GetValue(parameters)
+                })
+                .Where(x => x.Value != null)
+                .Select(x => $"{x.Name}={System.Net.WebUtility.UrlEncode(x.Value?.ToString() ?? string.Empty)}")
                 // prepend ? for the first param, & for the rest
-                .Select((x, i) => i > 0 ? $"&{x}" : $"?{x}")
-                .ToArray();
+                .Select((x, i) => i > 0 ? $"&{x}" : $"?{x}");
 
-            return encodedParams.Length > 0 ? $"{segment}{string.Join(string.Empty, encodedParams)}" : segment;
-        }
-
-        private static async Task<T> ParseResponse<T>(HttpResponseMessage response)
-        {
-            response.EnsureSuccessStatusCode();
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var listingsResponse = JsonConvert.DeserializeObject<T>(responseContent);
-            return listingsResponse;
+            return string.Join(string.Empty, encodedValues);
         }
     }
 }
