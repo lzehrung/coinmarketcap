@@ -77,7 +77,7 @@ namespace CoinMarketCap
         /// <summary>
         /// Get a paginated list of all cryptocurrencies with market data for a given historical time. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
         /// </summary>
-        public async Task<Response<List<CryptocurrencyWithHistoricalQuote>>> GetHistoricalMarketDataAsync(ListingHistoricalParameters request, CancellationToken cancellationToken)
+        public async Task<Response<List<CryptocurrencyWithHistoricalQuote>>> GetHistoricalListingsAsync(ListingHistoricalParameters request, CancellationToken cancellationToken)
         {
             return await SendApiRequest<List<CryptocurrencyWithHistoricalQuote>>(request, "cryptocurrency/listings/historical", cancellationToken);
         }
@@ -85,9 +85,9 @@ namespace CoinMarketCap
         /// <summary>
         /// Get a paginated list of all cryptocurrencies with market data for a given historical time. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
         /// </summary>
-        public Response<List<CryptocurrencyWithHistoricalQuote>> GetHistoricalMarketData(ListingHistoricalParameters request)
+        public Response<List<CryptocurrencyWithHistoricalQuote>> GetHistoricalListings(ListingHistoricalParameters request)
         {
-            return GetHistoricalMarketDataAsync(request, CancellationToken.None).Result;
+            return GetHistoricalListingsAsync(request, CancellationToken.None).Result;
         }
 
         /// <summary>
@@ -107,35 +107,19 @@ namespace CoinMarketCap
         }
 
         /// <summary>
-        /// Return the latest OHLCV (Open, High, Low, Close, Volume) market values for one or more cryptocurrencies in the currently UTC day. Since the current UTC day is still active these values are updated frequently. You can find the final calculated OHLCV values for the last completed UTC day along with all historic days using /cryptocurrency/ohlcv/historical.
+        /// Return an interval of historic OHLCV (Open, High, Low, Close, Volume) market quotes for a cryptocurrency. Currently daily and hourly OHLCV periods are supported.
         /// </summary>
-        public async Task<Response<OhlcvHistoricalResponse>> GetMarketPairLatestAsync(OhlcvHistoricalParameters request, CancellationToken cancellationToken)
+        public async Task<Response<OhlcvHistoricalResponse>> GetOhlcvHistoricalAsync(OhlcvHistoricalParameters request, CancellationToken cancellationToken)
         {
             return await SendApiRequest<OhlcvHistoricalResponse>(request, "cryptocurrency/ohlcv/historical", cancellationToken);
         }
 
         /// <summary>
-        /// Return the latest OHLCV (Open, High, Low, Close, Volume) market values for one or more cryptocurrencies in the currently UTC day. Since the current UTC day is still active these values are updated frequently. You can find the final calculated OHLCV values for the last completed UTC day along with all historic days using /cryptocurrency/ohlcv/historical.
+        /// Return an interval of historic OHLCV (Open, High, Low, Close, Volume) market quotes for a cryptocurrency. Currently daily and hourly OHLCV periods are supported.
         /// </summary>
-        public Response<OhlcvHistoricalResponse> GetMarketPairLatest(OhlcvHistoricalParameters request)
+        public Response<OhlcvHistoricalResponse> GetOhlcvHistorical(OhlcvHistoricalParameters request)
         {
-            return GetMarketPairLatestAsync(request, CancellationToken.None).Result;
-        }
-
-        /// <summary>
-        /// Returns an interval of historic market quotes for any cryptocurrency based on time and interval parameters.
-        /// </summary>
-        public async Task<Response<CryptocurrencyWithHistoricalQuote>> GetHistoricalQuoteAsync(HistoricalQuoteParameters request, CancellationToken cancellationToken)
-        {
-            return await SendApiRequest<CryptocurrencyWithHistoricalQuote>(request, "cryptocurrency/quotes/historical", cancellationToken);
-        }
-
-        /// <summary>
-        /// Returns an interval of historic market quotes for any cryptocurrency based on time and interval parameters.
-        /// </summary>
-        public Response<CryptocurrencyWithHistoricalQuote> GetHistoricalQuote(HistoricalQuoteParameters request)
-        {
-            return GetHistoricalQuoteAsync(request, CancellationToken.None).Result;
+            return GetOhlcvHistoricalAsync(request, CancellationToken.None).Result;
         }
 
         /// <summary>
@@ -152,6 +136,22 @@ namespace CoinMarketCap
         public Response<CryptocurrencyWithLatestQuote> GetLatestQuote(LatestQuoteParameters request)
         {
             return GetLatestQuoteAsync(request, CancellationToken.None).Result;
+        }
+
+        /// <summary>
+        /// Returns an interval of historic market quotes for any cryptocurrency based on time and interval parameters.
+        /// </summary>
+        public async Task<Response<CryptocurrencyWithHistoricalQuote>> GetHistoricalQuoteAsync(HistoricalQuoteParameters request, CancellationToken cancellationToken)
+        {
+            return await SendApiRequest<CryptocurrencyWithHistoricalQuote>(request, "cryptocurrency/quotes/historical", cancellationToken);
+        }
+
+        /// <summary>
+        /// Returns an interval of historic market quotes for any cryptocurrency based on time and interval parameters.
+        /// </summary>
+        public Response<CryptocurrencyWithHistoricalQuote> GetHistoricalQuote(HistoricalQuoteParameters request)
+        {
+            return GetHistoricalQuoteAsync(request, CancellationToken.None).Result;
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace CoinMarketCap
                     Value = x.GetValue(parameters)
                 })
                 .Where(x => x.Value != null)
-                .Select(x => $"{x.Name}={System.Net.WebUtility.UrlEncode(JsonConvert.SerializeObject(x.Value))}")
+                .Select(x => $"{x.Name}={System.Net.WebUtility.UrlEncode(x.Value?.ToString() ?? string.Empty)}")
                 // prepend ? for the first param, & for the rest
                 .Select((x, i) => i > 0 ? $"&{x}" : $"?{x}");
 

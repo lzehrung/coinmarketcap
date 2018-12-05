@@ -20,12 +20,12 @@ namespace CoinMarketCap.Tests
         }
 
         [TestMethod]
-        public async Task GetAggregateMarketMetrics_GivenRequest_Succeeds()
+        public async Task GetCryptocurrencyIdMapAsync_GivenRequest_Succeeds()
         {
             Response<List<IdMap>> response = null;
             try
             {
-                response = await _client.GetCryptocurrencyIdMapAsync(new IdMapParameters(), CancellationToken.None);
+                response = await _client.GetCryptocurrencyIdMapAsync(new IdMapParameters { Symbol = "LINK" }, CancellationToken.None);
             }
             catch (Exception ex)
             {
@@ -35,12 +35,27 @@ namespace CoinMarketCap.Tests
         }
 
         [TestMethod]
-        public async Task GetListingLatest_GivenRequest_Succeeds()
+        public async Task GetLatestListingsAsync_GivenRequest_Succeeds()
         {
             Response<List<CryptocurrencyWithLatestQuote>> response = null;
             try
             {
                 response = await _client.GetLatestListingsAsync(new ListingLatestParameters(), CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            Assert.IsNotNull(response);
+        }
+
+        [TestMethod]
+        public async Task GetLatestQuoteAsync_GivenRequest_Succeeds()
+        {
+            Response<CryptocurrencyWithLatestQuote> response = null;
+            try
+            {
+                response = await _client.GetLatestQuoteAsync(new LatestQuoteParameters { Id = 1975 }, CancellationToken.None);
             }
             catch (Exception ex)
             {
