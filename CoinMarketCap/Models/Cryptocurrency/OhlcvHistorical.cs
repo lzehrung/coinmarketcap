@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace CoinMarketCap.Models.Cryptocurrency
 {
-    public partial class OhlcvHistoricalResponse
+    public class OhlcvHistoricalResponse
     {
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -20,42 +19,36 @@ namespace CoinMarketCap.Models.Cryptocurrency
         public QuoteElement[] Quotes { get; set; }
     }
 
-    public partial class QuoteElement
+    public class QuoteElement
     {
         [JsonProperty("time_open")]
-        public DateTimeOffset TimeOpen { get; set; }
+        public DateTimeOffset? TimeOpen { get; set; }
 
         [JsonProperty("time_close")]
-        public DateTimeOffset TimeClose { get; set; }
+        public DateTimeOffset? TimeClose { get; set; }
 
         [JsonProperty("quote")]
-        public QuoteQuote Quote { get; set; }
+        public Dictionary<string, Ohlcv> Quote { get; set; }
     }
 
-    public partial class QuoteQuote
-    {
-        [JsonProperty("USD")]
-        public Usd Usd { get; set; }
-    }
-
-    public partial class Usd
+    public class Ohlcv
     {
         [JsonProperty("open")]
-        public double Open { get; set; }
+        public double? Open { get; set; }
 
         [JsonProperty("high")]
-        public double High { get; set; }
+        public double? High { get; set; }
 
         [JsonProperty("low")]
-        public double Low { get; set; }
+        public double? Low { get; set; }
 
         [JsonProperty("close")]
-        public double Close { get; set; }
+        public double? Close { get; set; }
 
         [JsonProperty("volume")]
-        public long Volume { get; set; }
+        public long? Volume { get; set; }
 
         [JsonProperty("timestamp")]
-        public DateTimeOffset Timestamp { get; set; }
+        public DateTimeOffset? Timestamp { get; set; }
     }
 }

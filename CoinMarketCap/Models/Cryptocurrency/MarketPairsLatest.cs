@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace CoinMarketCap.Models.Cryptocurrency
 {
-    public partial class MarketPairLatestResponse
+    public class MarketPairLatestResponse
     {
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -15,31 +17,60 @@ namespace CoinMarketCap.Models.Cryptocurrency
         public string Symbol { get; set; }
 
         [JsonProperty("num_market_pairs")]
-        public long NumMarketPairs { get; set; }
+        public long? NumMarketPairs { get; set; }
 
         [JsonProperty("market_pairs")]
         public MarketPair[] MarketPairs { get; set; }
     }
 
-    public partial class MarketPair
+    public class MarketPair
     {
         [JsonProperty("exchange")]
         public Exchange Exchange { get; set; }
 
         [JsonProperty("market_pair")]
-        public string MarketPairMarketPair { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("market_pair_base")]
-        public MarketPairBaseClass MarketPairBase { get; set; }
+        public MarketPairMetadata MarketPairMetadata { get; set; }
 
         [JsonProperty("market_pair_quote")]
-        public MarketPairBaseClass MarketPairQuote { get; set; }
+        public MarketPairMetadata MarketPairQuote { get; set; }
 
         [JsonProperty("quote")]
-        public MarketPairQuote Quote { get; set; }
+        public Dictionary<string, object> Quote { get; set; }
+
+        public ExchangeReported ExchangeReported()
+        {
+            if (Quote.ContainsKey("exchange_reported"))
+            {
+                return (ExchangeReported)Quote["exchange_reported"];
+            }
+            return null;
+        }
+
+        public QuoteInCurrency GetCurrencyQuote(string currency)
+        {
+            if (Quote.ContainsKey(currency))
+            {
+                return (QuoteInCurrency)Quote[currency];
+            }
+            return null;
+        }
+
+        public QuoteInCurrency FirstCurrencyQuote()
+        {
+            if (Quote.Count >= 1)
+            {
+                var array = Quote.Values.ToArray();
+                return (QuoteInCurrency)array[1];
+            }
+
+            return null;
+        }
     }
 
-    public partial class Exchange
+    public class Exchange
     {
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -51,7 +82,7 @@ namespace CoinMarketCap.Models.Cryptocurrency
         public string Slug { get; set; }
     }
 
-    public partial class MarketPairBaseClass
+    public class MarketPairMetadata
     {
         [JsonProperty("currency_id")]
         public long CurrencyId { get; set; }
@@ -63,39 +94,30 @@ namespace CoinMarketCap.Models.Cryptocurrency
         public string CurrencyType { get; set; }
     }
 
-    public partial class MarketPairQuote
-    {
-        [JsonProperty("exchange_reported")]
-        public ExchangeReported ExchangeReported { get; set; }
-
-        [JsonProperty("USD")]
-        public Usd Usd { get; set; }
-    }
-
-    public partial class ExchangeReported
+    public class ExchangeReported
     {
         [JsonProperty("price")]
-        public double Price { get; set; }
+        public double? Price { get; set; }
 
         [JsonProperty("volume_24h_base")]
-        public double Volume24HBase { get; set; }
+        public double? Volume24HBase { get; set; }
 
         [JsonProperty("volume_24h_quote")]
-        public double Volume24HQuote { get; set; }
+        public double? Volume24HQuote { get; set; }
 
         [JsonProperty("last_updated")]
-        public DateTimeOffset LastUpdated { get; set; }
+        public DateTimeOffset? LastUpdated { get; set; }
     }
 
-    public partial class Usd
+    public class QuoteInCurrency
     {
         [JsonProperty("price")]
-        public double Price { get; set; }
+        public double? Price { get; set; }
 
         [JsonProperty("volume_24h")]
-        public double Volume24H { get; set; }
+        public double? Volume24H { get; set; }
 
         [JsonProperty("last_updated")]
-        public DateTimeOffset LastUpdated { get; set; }
+        public DateTimeOffset? LastUpdated { get; set; }
     }
 }

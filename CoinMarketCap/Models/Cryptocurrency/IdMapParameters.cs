@@ -8,7 +8,7 @@ namespace CoinMarketCap.Models.Cryptocurrency
         public string ListingStatus { get; set; }
 
         [JsonProperty("start")]
-        public long Start { get; set; }
+        public long? Start { get; set; }
 
         [JsonProperty("limit")]
         public string Limit { get; set; }

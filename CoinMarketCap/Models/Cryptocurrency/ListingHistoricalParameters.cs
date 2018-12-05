@@ -5,9 +5,6 @@ namespace CoinMarketCap.Models.Cryptocurrency
 {
     public class ListingHistoricalParameters
     {
-        [JsonProperty("timestamp")]
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
-
         [JsonProperty("start")]
         public int? Start { get; set; }
 
@@ -25,5 +22,8 @@ namespace CoinMarketCap.Models.Cryptocurrency
 
         [JsonProperty("cryptocurrency_type")]
         public string CryptocurrencyType { get; set; }
+
+        [JsonProperty("timestamp")]
+        public DateTime? Timestamp { get; set; } = DateTime.UtcNow;
     }
 }

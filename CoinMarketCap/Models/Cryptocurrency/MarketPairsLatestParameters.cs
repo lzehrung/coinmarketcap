@@ -5,10 +5,10 @@ using Newtonsoft.Json;
 
 namespace CoinMarketCap.Models.Cryptocurrency
 {
-    public class MarketPairsLatestParams
+    public class MarketPairsLatestParameters
     {
         [JsonProperty("id")]
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         [JsonProperty("symbol")]
         public string Symbol { get; set; }

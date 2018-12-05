@@ -19,27 +19,27 @@ namespace CoinMarketCap.Models.Cryptocurrency
         public string Slug { get; set; }
 
         [JsonProperty("cmc_rank")]
-        public long CmcRank { get; set; }
+        public long? CmcRank { get; set; }
 
         [JsonProperty("num_market_pairs")]
-        public long NumMarketPairs { get; set; }
+        public long? NumMarketPairs { get; set; }
 
         [JsonProperty("circulating_supply")]
-        public long CirculatingSupply { get; set; }
+        public long? CirculatingSupply { get; set; }
 
         [JsonProperty("total_supply")]
-        public long TotalSupply { get; set; }
+        public long? TotalSupply { get; set; }
 
         [JsonProperty("max_supply")]
-        public long MaxSupply { get; set; }
+        public long? MaxSupply { get; set; }
 
         [JsonProperty("last_updated")]
-        public DateTimeOffset LastUpdated { get; set; }
+        public DateTimeOffset? LastUpdated { get; set; }
 
         [JsonProperty("date_added")]
-        public DateTimeOffset DateAdded { get; set; }
+        public DateTimeOffset? DateAdded { get; set; }
 
         [JsonProperty("quote")]
-        public Dictionary<string, MarketPairQuote> Quote { get; set; }
+        public Dictionary<string, CryptocurrencyPriceQuote> Quote { get; set; }
     }
 }
