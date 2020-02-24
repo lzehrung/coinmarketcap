@@ -125,15 +125,15 @@ namespace CoinMarketCap
         /// <summary>
         /// Get the latest market quote for 1 or more cryptocurrencies. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
         /// </summary>
-        public async Task<Response<CryptocurrencyWithLatestQuote>> GetLatestQuoteAsync(LatestQuoteParameters request, CancellationToken cancellationToken)
+        public async Task<Response<Dictionary<string,CryptocurrencyWithLatestQuote>>> GetLatestQuoteAsync(LatestQuoteParameters request, CancellationToken cancellationToken)
         {
-            return await SendApiRequest<CryptocurrencyWithLatestQuote>(request, "cryptocurrency/quotes/latest", cancellationToken);
+            return await SendApiRequest<Dictionary<string, CryptocurrencyWithLatestQuote>>(request, "cryptocurrency/quotes/latest", cancellationToken);
         }
 
         /// <summary>
         /// Get the latest market quote for 1 or more cryptocurrencies. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
         /// </summary>
-        public Response<CryptocurrencyWithLatestQuote> GetLatestQuote(LatestQuoteParameters request)
+        public Response<Dictionary<string, CryptocurrencyWithLatestQuote>> GetLatestQuote(LatestQuoteParameters request)
         {
             return GetLatestQuoteAsync(request, CancellationToken.None).Result;
         }
