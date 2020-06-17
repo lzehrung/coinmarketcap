@@ -15,5 +15,8 @@ namespace CoinMarketCap.Models.Cryptocurrency
 
         [JsonProperty("symbol")]
         public string Symbol { get; set; }
+
+        [JsonProperty("sort")]
+        public string Sort { get; set; }
     }
 }

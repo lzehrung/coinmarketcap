@@ -5,7 +5,7 @@ namespace CoinMarketCap.Models.Cryptocurrency
     public class LatestQuoteParameters
     {
         [JsonProperty("id")]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("symbol")]
         public string Symbol { get; set; }
