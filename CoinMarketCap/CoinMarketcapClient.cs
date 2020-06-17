@@ -15,15 +15,15 @@ namespace CoinMarketCap
 {
     public class CoinMarketCapClient
     {
-        public readonly HttpClient Client = new HttpClient
+        public readonly HttpClient HttpClient = new HttpClient
         {
             BaseAddress = new Uri("https://pro-api.coinmarketcap.com/v1/")
         };
 
         public CoinMarketCapClient(string apiKey)
         {
-            Client.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", apiKey);
-            Client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpClient.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", apiKey);
+            HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace CoinMarketCap
             var queryParams = ConvertToQueryParams(requestParams);
             var endpointWithParams = $"{endpoint}{queryParams}";
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, endpointWithParams);
-            var responseMessage = await Client.SendAsync(requestMessage, cancellationToken);
+            var responseMessage = await HttpClient.SendAsync(requestMessage, cancellationToken);
             responseMessage.EnsureSuccessStatusCode();
             var content = await responseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Response<T>>(content);
@@ -191,7 +191,7 @@ namespace CoinMarketCap
                     Value = x.GetValue(parameters)
                 })
                 .Where(x => x.Value != null)
-                .Select(x => $"{x.Name}={System.Net.WebUtility.UrlEncode(x.Value?.ToString() ?? string.Empty)}")
+                .Select(x => $"{x.Name}={System.Net.WebUtility.UrlEncode(x.Value.ToString())}")
                 // prepend ? for the first param, & for the rest
                 .Select((x, i) => i > 0 ? $"&{x}" : $"?{x}");
 

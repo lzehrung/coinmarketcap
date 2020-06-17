@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CoinMarketCap.Tests.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="cmc_api_key" Type="System.String" Scope="User">
+      <Value Profile="(Default)">3315f01c-0150-4d1e-896e-b9d7f506e1d1</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

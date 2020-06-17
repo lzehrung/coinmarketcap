@@ -4,10 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoinMarketCap.Models;
 using CoinMarketCap.Models.Cryptocurrency;
+using CoinMarketCap.Tests.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CoinMarketCap.Tests
 {
+    [Ignore]
     [TestClass]
     public class CoinMarketCapClientTests
     {
@@ -16,7 +18,7 @@ namespace CoinMarketCap.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _client = new CoinMarketCapClient("your-api-key");
+            _client = new CoinMarketCapClient(Settings.Default.cmc_api_key);
         }
 
         [TestMethod]
