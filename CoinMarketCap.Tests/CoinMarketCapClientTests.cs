@@ -54,7 +54,7 @@ namespace CoinMarketCap.Tests
         [TestMethod]
         public async Task GetLatestQuoteAsync_GivenRequest_Succeeds()
         {
-            Response<CryptocurrencyWithLatestQuote> response = null;
+            Response<Dictionary<string, CryptocurrencyWithLatestQuote>> response = null;
             try
             {
                 response = await _client.GetLatestQuoteAsync(new LatestQuoteParameters { Id = 1975 }, CancellationToken.None);
