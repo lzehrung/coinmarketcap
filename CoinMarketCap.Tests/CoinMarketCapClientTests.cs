@@ -64,6 +64,20 @@ namespace CoinMarketCap.Tests
         }
 
         [TestMethod]
+        public async Task GetLatestListingAsync_GivenRequestWithFilter_Succeeds()
+        {
+            Response<List<CryptocurrencyWithLatestQuote>> response = null;
+            int limit = 3;
+            response = await _client.GetLatestListingsAsync(new ListingLatestParameters { Limit = limit, CryptocurrencyType = "tokens"/*, Convert = "USD;BTC;ETH"*/}, CancellationToken.None);
+            CheckResponse(response);
+
+            Assert.AreEqual(limit, response.Data.Count);
+            var d = response.Data.Select(o => o.Symbol);
+            Assert.IsFalse(d.Contains("BTC"));
+            Assert.IsTrue(d.Contains("USDT"));
+        }
+
+        [TestMethod]
         public async Task GetLatestQuoteAsync_GivenRequest_Succeeds()
         {
             Response<Dictionary<string, CryptocurrencyWithLatestQuote>> response = null;
