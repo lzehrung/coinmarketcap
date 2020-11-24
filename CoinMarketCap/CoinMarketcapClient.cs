@@ -181,13 +181,18 @@ namespace CoinMarketCap
             return JsonConvert.DeserializeObject<Response<T>>(content);
         }
 
+        private static string GetPropName(PropertyInfo prop)
+        {
+            return prop.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName;
+        }
+
         private static string ConvertToQueryParams(object parameters)
         {
             var properties = parameters.GetType().GetRuntimeProperties();
             var encodedValues = properties
                 .Select(x => new
                 {
-                    Name = x.Name.ToLower(),
+                    Name = GetPropName(x),
                     Value = x.GetValue(parameters)
                 })
                 .Where(x => x.Value != null)
