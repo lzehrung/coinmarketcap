@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
@@ -176,9 +177,30 @@ namespace CoinMarketCap
             var endpointWithParams = $"{endpoint}{queryParams}";
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, endpointWithParams);
             var responseMessage = await HttpClient.SendAsync(requestMessage, cancellationToken);
+            bool can_read = responseMessage.IsSuccessStatusCode;
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                var knownStatusCodes = new HttpStatusCode[] {
+                    HttpStatusCode.BadRequest,
+                    HttpStatusCode.Unauthorized,
+                    HttpStatusCode.PaymentRequired,
+                    HttpStatusCode.Forbidden,
+                    (HttpStatusCode)429 /*Too many requests*/
+                };
+                can_read = knownStatusCodes.Contains(responseMessage.StatusCode);
+            }
+            if(can_read)
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Response<T>>(content);
+            }
             responseMessage.EnsureSuccessStatusCode();
-            var content = await responseMessage.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Response<T>>(content);
+            return null;
+        }
+
+        private static string GetPropName(PropertyInfo prop)
+        {
+            return prop.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName;
         }
 
         private static string ConvertToQueryParams(object parameters)
@@ -187,7 +209,7 @@ namespace CoinMarketCap
             var encodedValues = properties
                 .Select(x => new
                 {
-                    Name = x.Name.ToLower(),
+                    Name = GetPropName(x),
                     Value = x.GetValue(parameters)
                 })
                 .Where(x => x.Value != null)

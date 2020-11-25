@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinMarketCap.Models;
@@ -21,6 +22,17 @@ namespace CoinMarketCap.Tests
             _client = new CoinMarketCapClient(Settings.Default.cmc_api_key);
         }
 
+        void CheckResponse<T>(Response<T> response)
+        {
+            Assert.IsNotNull(response);
+            Assert.AreEqual(0, response.Status.ErrorCode, response.Status.ErrorMessage);
+        }
+        void CheckResponse<T>(Response<List<T>> response)
+        {
+            CheckResponse<List<T>>(response);
+            Assert.IsTrue(response.Data.Count > 0);
+        }
+
         [TestMethod]
         public async Task GetCryptocurrencyIdMapAsync_GivenRequest_Succeeds()
         {
@@ -33,7 +45,7 @@ namespace CoinMarketCap.Tests
             {
                 Assert.Fail(ex.Message);
             }
-            Assert.IsNotNull(response);
+            CheckResponse(response);
         }
 
         [TestMethod]
@@ -48,7 +60,21 @@ namespace CoinMarketCap.Tests
             {
                 Assert.Fail(ex.Message);
             }
-            Assert.IsNotNull(response);
+            CheckResponse(response);
+        }
+
+        [TestMethod]
+        public async Task GetLatestListingAsync_GivenRequestWithFilter_Succeeds()
+        {
+            Response<List<CryptocurrencyWithLatestQuote>> response = null;
+            int limit = 3;
+            response = await _client.GetLatestListingsAsync(new ListingLatestParameters { Limit = limit, CryptocurrencyType = "tokens"/*, Convert = "USD;BTC;ETH"*/}, CancellationToken.None);
+            CheckResponse(response);
+
+            Assert.AreEqual(limit, response.Data.Count);
+            var d = response.Data.Select(o => o.Symbol);
+            Assert.IsFalse(d.Contains("BTC"));
+            Assert.IsTrue(d.Contains("USDT"));
         }
 
         [TestMethod]
@@ -63,7 +89,18 @@ namespace CoinMarketCap.Tests
             {
                 Assert.Fail(ex.Message);
             }
+            CheckResponse(response);
+        }
+
+        [TestMethod]
+        public async Task GetHystoricalQuoteAsync()
+        {
+            Response<CryptocurrencyWithHistoricalQuote> response = null;
+            response = await _client.GetHistoricalQuoteAsync(new HistoricalQuoteParameters { Id = "1975" }, CancellationToken.None);
             Assert.IsNotNull(response);
+            //CheckResponse(response);
+            //There is an error because historical data need paid account
+            Assert.AreEqual(1006, response.Status.ErrorCode, response.Status.ErrorMessage);
         }
     }
 }
