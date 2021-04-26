@@ -212,8 +212,8 @@ namespace CoinMarketCap
                     Name = GetPropName(x),
                     Value = x.GetValue(parameters)
                 })
-                .Where(x => x.Value != null)
-                .Select(x => $"{x.Name}={System.Net.WebUtility.UrlEncode(x.Value.ToString())}")
+                .Where(x => x.Value != null && !string.IsNullOrWhiteSpace(x.Name))
+                .Select(x => $"{x.Name}={WebUtility.UrlEncode(x.Value.ToString())}")
                 // prepend ? for the first param, & for the rest
                 .Select((x, i) => i > 0 ? $"&{x}" : $"?{x}");
 
