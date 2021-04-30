@@ -24,7 +24,7 @@ Currently supports the following endpoints:
 Get CoinMarketCap ID to symbol map for Chainlink:
 ```cs
 var client = new CoinMarketCapClient(yourCmcApiKey);
-var listingsResponse = await _client.GetCryptocurrencyIdMapAsync(new IdMapParameters { Symbol = "LINK" }, CancellationToken.None);
+var listingsResponse = await client.GetCryptocurrencyIdMapAsync(new IdMapParameters { Symbol = "LINK" }, CancellationToken.None);
 ```
 
 Example response (JSON):
