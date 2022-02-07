@@ -10,7 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CoinMarketCap.Tests
 {
-    [Ignore]
     [TestClass]
     public class CoinMarketCapClientTests
     {
