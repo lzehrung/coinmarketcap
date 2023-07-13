@@ -14,9 +14,17 @@ using Newtonsoft.Json;
 
 namespace CoinMarketCap
 {
-    public class CoinMarketCapClient
+    public class CoinMarketCapClient : IDisposable
     {
-        public readonly HttpClient HttpClient = new HttpClient
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing,
+        /// releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <filterpriority>2</filterpriority>
+        public void Dispose()
+            => HttpClient?.Dispose();
+
+        public HttpClient HttpClient { get; } = new HttpClient
         {
             BaseAddress = new Uri("https://pro-api.coinmarketcap.com/v1/")
         };
